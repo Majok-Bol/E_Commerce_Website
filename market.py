@@ -1,7 +1,18 @@
 '''Import flask class from Flask module'''
 from flask import Flask,render_template
+from flask_sqlalchemy import SQLAlchemy
 '''Create instance of flask class'''
 app=Flask(__name__)
+#configure the database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market.db'
+db = SQLAlchemy(app)
+#create instance of database
+class Item(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name=db.Column(db.String(length=30),nullable=False,unique=True)
+    price=db.Column(db.Integer(),nullable=False)
+    barcode=db.Column(db.String(length=12),nullable=False,unique=True)
+    description=db.Column(db.String(length=1000),nullable=False,unique=True)
 @app.route('/')
 @app.route('/home')
 def home_page():
@@ -14,7 +25,7 @@ def market_page():
         {'id': 3, 'name': 'Keyboard', 'barcode': '231985128446', 'price': 150}
     ]
      
-     return render_template('market.html',item_values=items)
+     return render_template('market.html',items=items)
 
 if __name__=='__main__':
-   app.run(debug=True)
+    app.run(debug=True)
