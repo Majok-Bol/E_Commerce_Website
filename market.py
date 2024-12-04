@@ -13,19 +13,21 @@ class Item(db.Model):
     price=db.Column(db.Integer(),nullable=False)
     barcode=db.Column(db.String(length=12),nullable=False,unique=True)
     description=db.Column(db.String(length=1000),nullable=False,unique=True)
+    def __repr__(self):
+        return f"Item:{self.name}"
 @app.route('/')
 @app.route('/home')
 def home_page():
     return render_template('home.html')
 @app.route('/market')
 def market_page():
-     items = [
-        {'id': 1, 'name': 'Phone', 'barcode': '893212299897', 'price': 500},
-        {'id': 2, 'name': 'Laptop', 'barcode': '123985473165', 'price': 900},
-        {'id': 3, 'name': 'Keyboard', 'barcode': '231985128446', 'price': 150}
-    ]
+     items =Item.query.all()
      
      return render_template('market.html',items=items)
+ # Add the shell context processor
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, 'Item': Item}
 
 if __name__=='__main__':
     app.run(debug=True)
