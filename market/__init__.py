@@ -9,3 +9,4 @@ db = SQLAlchemy(app)
 #create instance of database
 
 from market import routes
+
